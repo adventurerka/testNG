@@ -1,15 +1,20 @@
 package test;
 
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class NegativeTests {
 
-    String path = "src/main/resources/new/";
+
+    Path currentRelativePath = Paths.get("");
+    String path = currentRelativePath.toAbsolutePath().toString()+"/new/";
     File file = new File(path);
 
     @BeforeClass(alwaysRun = true)
@@ -23,7 +28,7 @@ public class NegativeTests {
         fc.createNewFile(path+" ", "");
         for (File s:file.listFiles())
         System.out.println("List: "+s);
-        System.out.println("createFileWithEmptyName");
+        Assert.assertTrue(file.listFiles().length==0);
     }
 
     @AfterClass(alwaysRun = true)
