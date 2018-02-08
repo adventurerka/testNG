@@ -14,7 +14,7 @@ public class PositiveTests {
     String path = "src/main/resources/new/";
     File file = new File(path);
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp() {
         file.mkdir();
     }
@@ -25,20 +25,22 @@ public class PositiveTests {
          return contentDataBase.fileContent().iterator();
     }
 
-    @Test(dataProvider = "fileContent")
+    @Test(groups = "positive",dataProvider = "fileContent")
     public void createFileWithData(String fileContent) throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(path+fileContent+".txt", fileContent);
+        System.out.println("createFileWithData");
     }
 
-    @Test
+    @Test(groups = {"positive", "stop"})
     public void createFileAndChangeData () throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(path+"file2.txt","POTATO!!!");
         fc.createNewFile(path+"file2.txt", "APPLE!!!");
+        System.out.println("createFileAndChangeData");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
     new FileCreator().deleteDir(file);
     }

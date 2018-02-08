@@ -12,20 +12,21 @@ public class NegativeTests {
     String path = "src/main/resources/new/";
     File file = new File(path);
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void setUp(){
         file.mkdir();
     }
 
-    @Test
+    @Test(groups = "negative", alwaysRun = true)
     public void createFileWithEmptyName() throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(path+" ", "");
         for (File s:file.listFiles())
         System.out.println("List: "+s);
+        System.out.println("createFileWithEmptyName");
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void tearDown() {
         new FileCreator().deleteDir(file);
     }
