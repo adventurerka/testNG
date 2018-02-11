@@ -28,7 +28,7 @@ public class NegativeTests {
         fc.createNewFile(path+" ", "");
         for (File s:file.listFiles())
         System.out.println("List: "+s);
-        Assert.assertTrue(file.listFiles().length==0);
+        Assert.assertTrue(file.listFiles().length==1);
     }
 
     @AfterClass(alwaysRun = true)

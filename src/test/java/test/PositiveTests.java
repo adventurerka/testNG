@@ -6,11 +6,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class PositiveTests {
 
@@ -25,21 +29,25 @@ public class PositiveTests {
 
     @DataProvider
     public Iterator<Object[]> fileContent() {
-         ContentDataBase contentDataBase = new ContentDataBase();
-         return contentDataBase.fileContent().iterator();
+        List mylist = new ArrayList<Object[]>();
+        for(int i=0;i<10;i++){
+             mylist.add(new Object[]{new FileCreator().randomName(7),
+                     new FileCreator().randomName(7)});
+         }
+         return mylist.iterator();
     }
 
     @Test(groups = "positive",dataProvider = "fileContent")
-    public void createFileWithData(String fileContent) throws IOException {
+    public void createFileWithData(String fileContent, String name) throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(path+"text.txt", fileContent);
-        Assert.assertEquals(fc.readFile(path+"text.txt"), fileContent);
+        fc.createNewFile(path+name+".txt", fileContent);
+        Assert.assertEquals(fc.readFile(path+name+".txt"), fileContent);
     }
 
-    @Test(groups = {"positive", "stop"})
-    public void createFileAndChangeData () throws IOException {
+    @Test(dataProviderClass = DataProviders.class, dataProvider = "fileName",
+            groups = {"positive", "stop"})
+    public void createFileAndChangeData (String name) throws IOException {
         FileCreator fc = new FileCreator();
-        String name = fc.randomName(7);
         fc.createNewFile(path+name+".txt","POTATO!!!");
         fc.createNewFile(path+name+".txt", "APPLE!!!");
         Assert.assertEquals(fc.readFile(path+name+".txt"),"APPLE!!!");
