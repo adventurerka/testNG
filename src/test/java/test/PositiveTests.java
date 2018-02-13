@@ -37,11 +37,22 @@ public class PositiveTests {
          return mylist.iterator();
     }
 
-    @Test(groups = "positive",dataProvider = "fileContent")
+    @Test(groups =  {"positive", "stop"},dataProvider = "fileContent")
     public void createFileWithData(String fileContent, String name) throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(path+name+".txt", fileContent);
         Assert.assertEquals(fc.readFile(path+name+".txt"), fileContent);
+    }
+
+    @Test(groups = "positive",dataProvider = "excelDataProvider", dataProviderClass = ExcelDataProvider.class)
+    @ExcelDataSource(value = "src/test/resources/MyFirstExcel.xls",sheetName = "Datatypes in Java")
+    public void createFileWithData2(String par1, String par2, String par3) throws IOException {
+        FileCreator fc = new FileCreator();
+        fc.createNewFile(path+par1+".txt",
+                "DataType " + par1 + " Type " + par2 + " Size(in bytes) " + par3);
+        System.out.println("DataType " + par1 + " Type " + par2 + " Size(in bytes) " + par3);
+        Assert.assertEquals(fc.readFile(path+par1+".txt"),
+                "DataType " + par1 + " Type " + par2 + " Size(in bytes) " + par3);
     }
 
     @Test(dataProviderClass = DataProviders.class, dataProvider = "fileName",
