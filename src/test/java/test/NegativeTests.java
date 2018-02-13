@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class NegativeTests {
+public class NegativeTests extends FolderCreationFixture{
 
 
     Path currentRelativePath = Paths.get("");
@@ -22,13 +22,27 @@ public class NegativeTests {
         file.mkdir();
     }
 
-    @Test(groups = "negative", alwaysRun = true)
+    @Test(groups = "negative", enabled = false)
     public void createFileWithEmptyName() throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(path+" ", "");
         for (File s:file.listFiles())
         System.out.println("List: "+s);
         Assert.assertTrue(file.listFiles().length==1);
+    }
+
+    @Test(groups = "negative", alwaysRun = true)
+    @TempDir(read = true, write = false)
+    public void cannotCreateFileInAReadOnlyDir() {
+        FileCreator fc = new FileCreator();
+        boolean mistake = false;
+        try {
+            fc.createNewFile(path+"new2/"+"bfdz.txt", "");
+        } catch (IOException e) {
+            e.printStackTrace();
+            mistake = true;
+        }
+        Assert.assertTrue(mistake);
     }
 
     @AfterClass(alwaysRun = true)
